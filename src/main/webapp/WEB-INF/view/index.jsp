@@ -16,7 +16,7 @@
 
 <%--<a href= ${s:mvcUrl('LA#index')}>Login</a>--%>
 <br>
-<%--<a href= ${s:mvcUrl('R#index')}>Registration</a>--%>
+<a href="/registration">Registration</a>
 <br>
 <button type="button" class="btn btn-default navbar-btn">Sign in</button>
 
