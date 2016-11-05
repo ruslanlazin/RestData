@@ -19,9 +19,9 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan("ua.unicyb.restapplication.entity")
+@ComponentScan("ua.pp.lazin.restdata")
 @PropertySource("classpath:app.properties")
-@EnableJpaRepositories("ua.pp.lazin.restdata")
+@EnableJpaRepositories("ua.pp.lazin.restdata.repository")
 public class DataConfig {
     private static final String PROP_DATABASE_DRIVER = "db.driver";
     private static final String PROP_DATABASE_PASSWORD = "db.password";
@@ -49,6 +49,7 @@ public class DataConfig {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        System.out.println("emf");
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
         entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistence.class);
