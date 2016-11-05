@@ -1,7 +1,6 @@
 package ua.pp.lazin.restdata.utils;
 
-
-import org.hibernate.ejb.HibernatePersistence;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,7 +20,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan("ua.pp.lazin.restdata")
+@ComponentScan("ua.pp.lazin.restdata.entity")
 @PropertySource("classpath:app.properties")
 @EnableJpaRepositories("ua.pp.lazin.restdata.repository")
 public class DataConfig {
@@ -51,23 +50,15 @@ public class DataConfig {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        System.out.println("emf");
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        //entityManagerFactoryBean.setPersistenceUnitName("WebChat");
         entityManagerFactoryBean.setDataSource(dataSource());
-        entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistence.class);
+        entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         entityManagerFactoryBean.setPackagesToScan(env.getRequiredProperty(PROP_ENTITYMANAGER_PACKAGES_TO_SCAN));
 
         entityManagerFactoryBean.setJpaProperties(getHibernateProperties());
 
         return entityManagerFactoryBean;
-    }
-
-    @Bean
-    public MessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasenames("reg", "app");
-        messageSource.setDefaultEncoding("UTF-8");
-        return messageSource;
     }
 
     @Bean
@@ -78,12 +69,27 @@ public class DataConfig {
         return transactionManager;
     }
 
+
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasenames("reg", "app");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
+    }
+
     private Properties getHibernateProperties() {
         Properties properties = new Properties();
-        properties.put(PROP_HIBERNATE_DIALECT, env.getRequiredProperty(PROP_HIBERNATE_DIALECT));
-        properties.put(PROP_HIBERNATE_SHOW_SQL, env.getRequiredProperty(PROP_HIBERNATE_SHOW_SQL));
-        properties.put(PROP_HIBERNATE_HBM2DDL_AUTO, env.getRequiredProperty(PROP_HIBERNATE_HBM2DDL_AUTO));
-
+        properties.put("hibernate.connection.driver_class", "org.postgresql.Driver");
+        properties.put("hibernate.connection.username", "postgres");
+        properties.put("hibernate.connection.password", "asdfghjkl");
+        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL95Dialect");
+        properties.put("hibernate.show_sql", "true");
+        properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.connection.url", "jdbc:postgresql://lazin.pp.ua:5432/webchat");
+        properties.put("hibernate.connection.CharSet", "utf8");
+        properties.put("hibernate.connection.characterEncoding", "utf8");
+        properties.put("hibernate.connection.useUnicode", "true");
         return properties;
     }
 }

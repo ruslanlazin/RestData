@@ -15,7 +15,9 @@
         </style>
     </head>
     <body>
-    <s:url var="formUrl" value="/registrationhandler" />
+
+    ${sessionScope.alreadyexist}
+    <s:url var="formUrl" value="/registration-handler" />
      <sf:form modelAttribute="reg" action="${formUrl}">
 
       <fieldset>
